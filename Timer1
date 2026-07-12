@@ -1,0 +1,23 @@
+ISR(TIMER1_COMPA_vect)
+{
+
+    if(!enabled)
+    {
+        PORTB&=~(1<<1);
+        return;
+    }
+
+    accumulator += (uint16_t)(ctrl.settings.power*100.0f);
+
+    if(accumulator >= (window*600))
+    {
+        accumulator -= window*600;
+
+        PORTB |= (1<<1);
+    }
+    else
+    {
+        PORTB &= ~(1<<1);
+    }
+
+}
