@@ -23,21 +23,32 @@ enum class AlarmCode : uint8_t
 
 struct Settings
 {
-    float power;
-
-    uint8_t burst;
-
-    float fanOn;
-
-    float fanOff;
-
-    float maxTemp;
-
-    float currentLimit;
-
-    float energy;
-
     uint8_t magic;
+
+    float targetPower;        // кВт
+
+    uint8_t burstFrequency;   // 40...80 Гц
+
+    float fanOnTemp;          // °C
+
+    float fanOffTemp;         // °C
+
+    float maxTemp;            // °C
+
+    float currentLimit;       // А
+};
+
+struct Statistics
+{
+    float energykWh;
+
+    uint32_t runtimeSeconds;
+
+    float maxCurrent;
+
+    float maxTemperature;
+
+    uint32_t starts;
 };
 
 struct Runtime
@@ -48,15 +59,9 @@ struct Runtime
 
     float power;
 
-    float maxCurrent;
+    bool heaterEnabled;
 
-    float maxTemperature;
-
-    uint32_t runtimeSeconds;
-
-    bool heater;
-
-    bool fan;
+    bool fanEnabled;
 
     AlarmCode alarm;
 };
@@ -64,6 +69,8 @@ struct Runtime
 struct Controller
 {
     Settings settings;
+
+    Statistics stats;
 
     Runtime runtime;
 
