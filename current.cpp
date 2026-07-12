@@ -44,3 +44,48 @@ void currentInit()
 
     zeroOffset = sum / 64.0f;
 }
+static float readCurrent()
+{
+    uint16_t adc = analogRead(PIN_CURRENT);
+
+    float voltage =
+        ((float)adc - zeroOffset) *
+        ADC_REF /
+        ADC_MAX;
+
+    float current =
+        voltage /
+        SENSOR_SENS;
+
+    filteredCurrent +=
+        FILTER *
+        (current - filteredCurrent);
+
+    return filteredCurrent;
+}
+void currentTask()
+{
+
+    ctrl.runtime.current = readCurrent();
+
+    ctrl.runtime.power =
+        ctrl.runtime.current *
+        SUPPLY_VOLTAGE;
+
+    if (ctrl.runtime.current >
+        ctrl.stats.maxCurrent)
+    {
+        ctrl.stats.maxCurrent =
+            ctrl.runtime.current;
+    }
+
+}
+float currentGet()
+{
+    return ctrl.runtime.current;
+}
+
+float powerGet()
+{
+    return ctrl.runtime.power;
+}
